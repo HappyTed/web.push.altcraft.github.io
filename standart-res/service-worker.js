@@ -33,10 +33,40 @@ self.addEventListener('push', function(event) {
         })
     );
   
-    // Показать уведомление (опционально)
+    // Извлечение данных из payload для отображения уведомления
+    const title = payload.title || 'Default title';
+    const message = payload.message || 'Default message';
+    const icon = payload.icon || '/path/to/default/icon.png';
+    const url = payload.url || '/';
+  
+    // Показать уведомление
     event.waitUntil(
-      self.registration.showNotification('Notification title', {
-        body: payload.message || 'No payload',
+      self.registration.showNotification(title, {
+        body: message,
+        icon: icon,
+        data: {
+          url: url
+        }
+      })
+    );
+  });
+  
+  // Добавление события клика по уведомлению для открытия URL
+  self.addEventListener('notificationclick', function(event) {
+    event.notification.close();
+    const url = event.notification.data.url;
+    event.waitUntil(
+      clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
+        // Проверяем, есть ли уже открытая вкладка с этим URL
+        for (let client of windowClients) {
+          if (client.url === url && 'focus' in client) {
+            return client.focus();
+          }
+        }
+        // Если вкладки нет, открываем новую
+        if (clients.openWindow) {
+          return clients.openWindow(url);
+        }
       })
     );
   });
