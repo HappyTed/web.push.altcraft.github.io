@@ -1,5 +1,5 @@
 {
   "permissions": [ "activeTab" ],
-  "name": "https://teodor-grachev.qa.altcraft.com",
+  "name": "https://push-test-lab.qa.altcraft.com",
   "display": "standalone"
 }
