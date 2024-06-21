@@ -18,7 +18,7 @@ self.addEventListener('push', function(event) {
     };
   
     event.waitUntil(
-      fetch('http://push-test-lab.qa.altcraft.com:8080/v1/message/save', requestOptions)
+      fetch('http://push-test-lab.qa.altcraft.com:8080/v1/messages/save', requestOptions)
         .then(response => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
