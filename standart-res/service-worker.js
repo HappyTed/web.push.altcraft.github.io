@@ -4,12 +4,40 @@
 
 
 self.addEventListener('push', function(event) {
-    const payload = event.data ? event.data.text() : 'No payload';
+    const payload = event.data ? event.data.json() : {};
+  
     console.log('Push received:', payload);
-    
+  
+    // Отправка POST-запроса на указанный URL
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    };
+  
+    event.waitUntil(
+      fetch('http://push-test-lab.qa.altcraft.com:8080/v1/message/save', requestOptions)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('Push payload saved:', data);
+        })
+        .catch(error => {
+          console.error('There was a problem with the fetch operation:', error);
+        })
+    );
+  
+    // Показать уведомление (опционально)
     event.waitUntil(
       self.registration.showNotification('Notification title', {
-        body: payload,
+        body: payload.message || 'No payload',
       })
     );
   });
+  
