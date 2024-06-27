@@ -1,5 +1,5 @@
 {
   "permissions": [ "activeTab" ],
-  "name": "https://example.com",
+  "name": "https://teodor-grachev.qa.altcraft.com",
   "display": "standalone"
 }
